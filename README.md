@@ -126,6 +126,8 @@ Represents an active session with the BlockCoin API.
 - `username: str` — The username used for login.
 - `session` — The underlying `curl_cffi` session used to make HTTP requests.
 - `user: User` — The logged-in user's profile information (an instance of `User`).
+- `base_url: str` — Taken from the `config`, it shows the base url used for requests. Defaults to `"https://blockcoin.vercel.app"`.
+  - To specify this, set the config dict (from the `login` method in `utils.py`) to `{"BASE_URL": "https://blockcoin.vercel.app"}` or your other base url.
 
 **Public Methods:**
 - `update() -> None`  
@@ -271,6 +273,7 @@ Handles the user's theme information.
   **Arguments:**
   - `username (str)`: Your BlockCoin username.
   - `password (str)`: Your password.
+  - `config (dict)`: A set of configuration data to pass to the session.
   
   **Returns:**  
   A `Session` object after successful login.
