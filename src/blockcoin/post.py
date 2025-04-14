@@ -1,3 +1,5 @@
+import json
+
 from .utils import get_script_data
 from .user import User
 from datetime import datetime
@@ -37,6 +39,24 @@ class Post:
         self.views = self._data["views"]
         self.reposts_number = self._data["reposts_number"]
         self.comments_number = self._data["comments_number"]
+
+    @property
+    def liked(self):
+        res = self.session.post("https://blockcoin.vercel.app/post/liked", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
+        return res.json()["liked"]
+        
+
+    def like(self, exist_ok=False):
+        if self.liked and exist_ok == False:
+            raise Exception("Cannot like post: Post already liked.")
+        res = self.session.post("https://blockcoin.vercel.app/post/like", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
+        return res.status_code == 200
+    
+    def unlike(self, exist_ok=False):
+        if not self.liked and exist_ok == False:
+            raise Exception("Cannot unlike post: Post not liked.")
+        res = self.session.post("https://blockcoin.vercel.app/post/like", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
+        return res.status_code == 200 
 
     def __repr__(self):
         return f"<blockcoin.post.Post object for post {self.id}>"

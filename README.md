@@ -182,7 +182,22 @@ Represents a BlockCoin post.
 - `reposts_number: int` — Number of times reposted.
 - `comments_number: int` — Number of comments.
 
+**Properties:**
+- `liked -> bool`  
+  Returns `True` if the current session user has liked the post, else `False`.  
+  Internally performs a POST request to `/post/liked`.
+
 **Methods:**
+- `like(exist_ok: bool = False) -> bool`  
+  Likes the post.  
+  - If the post is already liked and `exist_ok` is `False`, raises an exception.  
+  - Returns `True` if the request succeeds.
+
+- `unlike(exist_ok: bool = False) -> bool`  
+  Unlikes the post.  
+  - If the post is not liked and `exist_ok` is `False`, raises an exception.  
+  - Returns `True` if the request succeeds.
+
 - `__repr__()` and `__str__()` — Provide string representations of the post.
 
 ---
