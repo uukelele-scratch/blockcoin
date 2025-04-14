@@ -5,16 +5,18 @@ class UserNotFound(Exception):
     pass
 
 class User:
-    def __init__(self, username, session, data=None):
+    def __init__(self, username, session, data=None, config={}):
         self.username = username
         self.session = session
+        self.config = config
+        self.base_url = self.config.get("BASE_URL", "https://blockcoin.vercel.app")
         if data:
             self._update_from_dashboard_data(data)
         else:
             self.update()
 
     def update(self):
-        res = self.session.get(f"{self.session.base_url}/profile/{self.username}", impersonate="chrome")
+        res = self.session.get(f"{self.base_url}/profile/{self.username}", impersonate="chrome")
         data = get_script_data(res.text)
         self._update_from_data(data)
 
@@ -43,7 +45,7 @@ class User:
             return self._posts_cache
         from .post import Post
         self._posts_cache = [
-            Post(id=post["data"]["id"], session=self.session, data=post)
+            Post(id=post["data"]["id"], session=self.session, data=post, config=self.config)
             for post in self._data["data"]["posts"]
         ]
         return self._posts_cache

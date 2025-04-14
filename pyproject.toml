@@ -1,6 +1,6 @@
 [project]
 name = "blockcoin"
-version = "0.3.0"
+version = "0.3.1"
 description = "BlockCoin API Wrapper"
 authors = [{name="uukelele-scratch", email="robustrobot11@gmail.com"}]
 license = {text = "MIT"}

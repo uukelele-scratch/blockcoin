@@ -14,7 +14,8 @@ class RegisterError(Exception):
 
 class Session:
     def __init__(self, username, password, config={}):
-        self.base_url = config.get("BASE_URL", "https://blockcoin.vercel.app")
+        self.config = config
+        self.base_url = self.config.get("BASE_URL", "https://blockcoin.vercel.app")
         if self.base_url.endswith("/"):
             self.base_url = self.base_url[:-1]
         self.session = requests.Session(headers={"Origin": self.base_url, "Host": self.base_url.replace("https://", "").replace("http://", ""), "Content-Type": "application/x-www-form-urlencoded"})
@@ -28,7 +29,7 @@ class Session:
         try:
             self._data = get_script_data(res.text)
             if self._data[0]["data"]["logged"] == True:
-                self.user = User(self.username, session=self.session, data=self._data)
+                self.user = User(self.username, session=self.session, data=self._data, config=self.config)
             else:
                 error = get_error(res.url)
                 raise LoginError(f"Failed to login. {error}")
@@ -41,7 +42,7 @@ class Session:
     def update(self):
         res = self.session.get(f"{self.base_url}/dashboard", impersonate="chrome")
         self._data = get_script_data(res.text)
-        self.user = User(self.username, session=self.session, data=self._data)
+        self.user = User(self.username, session=self.session, data=self._data, config=self.config)
 
     def __repr__(self):
         return f"<blockcoin.session.Session for {self.username} ({self.user_id})>"
@@ -58,7 +59,7 @@ class Session:
         res = self.session.post(f"{self.base_url}/post", impersonate="chrome", data={"post": body, "price": price, "repost": repost})
         res.raise_for_status()
         data = get_script_data(res.text)
-        return Post(id=data[1]["data"]["post"]["data"]["id"], session=self.session)
+        return Post(id=data[1]["data"]["post"]["data"]["id"], session=self.session, config=self.config)
     
     def fetch_post(self, id: str) -> Post:
         return Post(id=id, session=self.session)
