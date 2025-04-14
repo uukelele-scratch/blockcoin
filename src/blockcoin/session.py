@@ -53,6 +53,7 @@ class Session:
             repost = repost.id
         
         res = self.session.post("https://blockcoin.vercel.app/post", impersonate="chrome", data={"post": body, "price": price, "repost": repost})
+        res.raise_for_status()
         data = get_script_data(res.text)
         return Post(id=data[1]["data"]["post"]["data"]["id"], session=self.session)
     
