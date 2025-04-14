@@ -1,5 +1,15 @@
 # BlockCoin API Wrapper
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/uukelele-scratch/blockcoin/publish.yml)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/uukelele-scratch/blockcoin)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/uukelele-scratch/blockcoin)
+![PyPI - License](https://img.shields.io/pypi/l/blockcoin)
+![GitHub Repo stars](https://img.shields.io/github/stars/uukelele-scratch/blockcoin)
+![PyPI - Version](https://img.shields.io/pypi/v/blockcoin)
+
+
+
+
 BlockCoin is a Python library that provides an easy-to-use wrapper for interacting with the BlockCoin API. The library uses [curl_cffi](https://pypi.org/project/curl-cffi/) with Chrome impersonation to mimic browser behavior and bypass certain anti-bot measures. It gives you convenient access to login, register, fetch user data, create posts, and more.
 
 > **Note:** This library is currently in early development. Some features (like registration) are still a work-in-progress (WIP) and may change soon.
