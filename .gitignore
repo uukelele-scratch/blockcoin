@@ -1,0 +1,18 @@
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+
+# VS Code settings
+.vscode/
+*.code-workspace
+
+# Egg info directories
+*.egg-info/
+src/*.egg-info
+
+# Any compiled files
+build/
+dist/
+
+# Tests
+src/tests

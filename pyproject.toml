@@ -1,0 +1,12 @@
+[project]
+name = "blockcoin"
+version = "0.1.0"
+description = "BlockCoin API Wrapper"
+authors = [{name="uukelele-scratch", email="robustrobot11@gmail.com"}]
+license = {text = "MIT"}
+readme = "README.md"
+dependencies = ["curl_cffi==0.7.4"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
