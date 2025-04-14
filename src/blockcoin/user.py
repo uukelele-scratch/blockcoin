@@ -14,7 +14,7 @@ class User:
             self.update()
 
     def update(self):
-        res = self.session.get(f"https://blockcoin.vercel.app/profile/{self.username}", impersonate="chrome")
+        res = self.session.get(f"{self.session.base_url}/profile/{self.username}", impersonate="chrome")
         data = get_script_data(res.text)
         self._update_from_data(data)
 

@@ -73,9 +73,9 @@ def get_error(url: str) -> str:
             return error["description"]
     return "Unknown Error"
 
-def login(username: str, password: str) -> "Session":
+def login(username: str, password: str, config: dict={}) -> "Session":
     from .session import Session
-    return Session(username, password)
+    return Session(username, password, config=config)
 
 def _register(*args, **kwargs) -> "Session":
     from .session import Session

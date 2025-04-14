@@ -14,7 +14,7 @@ class Post:
         if data:
             self._update_from_data({"post": data})
         else:
-            res = session.get(f"https://blockcoin.vercel.app/post/{self.id}")
+            res = session.get(f"{self.session.base_url}/post/{self.id}")
             data = get_script_data(res.text)
             if data[1] == None:
                 raise PostNotFound(f"Post {id} not found.")
@@ -42,20 +42,20 @@ class Post:
 
     @property
     def liked(self):
-        res = self.session.post("https://blockcoin.vercel.app/post/liked", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
+        res = self.session.post(f"{self.session.base_url}/post/liked", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
         return res.json()["liked"]
         
 
     def like(self, exist_ok=False):
         if self.liked and exist_ok == False:
             raise Exception("Cannot like post: Post already liked.")
-        res = self.session.post("https://blockcoin.vercel.app/post/like", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
+        res = self.session.post(f"{self.session.base_url}/post/like", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
         return res.status_code == 200
     
     def unlike(self, exist_ok=False):
         if not self.liked and exist_ok == False:
             raise Exception("Cannot unlike post: Post not liked.")
-        res = self.session.post("https://blockcoin.vercel.app/post/like", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
+        res = self.session.post(f"{self.session.base_url}/post/like", headers={"Content-Type": "application/json"}, data=json.dumps({"post": self.id}), impersonate="chrome")
         return res.status_code == 200 
 
     def __repr__(self):

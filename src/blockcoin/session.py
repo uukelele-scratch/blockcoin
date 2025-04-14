@@ -13,15 +13,18 @@ class RegisterError(Exception):
     pass
 
 class Session:
-    def __init__(self, username, password):
-        self.session = requests.Session(headers={"Origin": "https://blockcoin.vercel.app", "Host": "blockcoin.vercel.app", "Content-Type": "application/x-www-form-urlencoded"})
+    def __init__(self, username, password, config={}):
+        self.base_url = config.get("BASE_URL", "https://blockcoin.vercel.app")
+        if self.base_url.endswith("/"):
+            self.base_url = self.base_url[:-1]
+        self.session = requests.Session(headers={"Origin": self.base_url, "Host": self.base_url.replace("https://", "").replace("http://", ""), "Content-Type": "application/x-www-form-urlencoded"})
         self.balance = 0.0
         self._login(username, password)
 
     def _login(self, username, password):
         self.username = username
         self.password = password
-        res = self.session.post("https://blockcoin.vercel.app/login", impersonate="chrome", data={"username": username, "password": password}, headers={"Referer": "https://blockcoin.vercel.app/login"})
+        res = self.session.post(f"{self.base_url}/login", impersonate="chrome", data={"username": username, "password": password}, headers={"Referer": f"{self.base_url}/login"})
         try:
             self._data = get_script_data(res.text)
             if self._data[0]["data"]["logged"] == True:
@@ -36,7 +39,7 @@ class Session:
                 raise
         
     def update(self):
-        res = self.session.get("https://blockcoin.vercel.app/dashboard", impersonate="chrome")
+        res = self.session.get(f"{self.base_url}/dashboard", impersonate="chrome")
         self._data = get_script_data(res.text)
         self.user = User(self.username, session=self.session, data=self._data)
 
@@ -52,7 +55,7 @@ class Session:
         else:
             repost = repost.id
         
-        res = self.session.post("https://blockcoin.vercel.app/post", impersonate="chrome", data={"post": body, "price": price, "repost": repost})
+        res = self.session.post(f"{self.base_url}/post", impersonate="chrome", data={"post": body, "price": price, "repost": repost})
         res.raise_for_status()
         data = get_script_data(res.text)
         return Post(id=data[1]["data"]["post"]["data"]["id"], session=self.session)
@@ -67,9 +70,9 @@ class Session:
     # WIP
     def _register(cls, username: str, email: str):
         self = object.__new__(cls)
-        self.session = requests.Session(headers={"Origin": "https://blockcoin.vercel.app", "Host": "blockcoin.vercel.app", "Content-Type": "application/x-www-form-urlencoded"})
-        self.session.get("https://blockcoin.vercel.app/", impersonate="chrome")
-        res = self.session.post("https://blockcoin.vercel.app/register", impersonate="chrome")
+        self.session = requests.Session(headers={"Origin": self.base_url, "Host": self.base_url.replace("https://", "").replace("http://", ""), "Content-Type": "application/x-www-form-urlencoded"})
+        self.session.get(self.base_url + "/", impersonate="chrome")
+        res = self.session.post(f"{self.base_url}/register", impersonate="chrome")
         error = get_error(res.url)
         if error:
             raise RegisterError(f"Failed to register account. {error}")
